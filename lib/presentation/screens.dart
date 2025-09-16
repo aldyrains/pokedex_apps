@@ -1,0 +1,1 @@
+export 'package:pokedex_apps/presentation/home/home.screen.dart';

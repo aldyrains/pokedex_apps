@@ -1,0 +1,1 @@
+export 'package:pokedex_apps/infrastructure/navigation/bindings/controllers/home.controller.binding.dart'; 
