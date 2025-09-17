@@ -3,4 +3,5 @@ class PokeStrings {
   static const imagePokeball = 'assets/images/pokeball.png';
   static const pikaLoader = 'assets/images/pika_loader.gif';
   static const imageDotted = 'assets/images/dotted.png';
+  static const endpoint = 'https://graphql-pokemon2.vercel.app';
 }
