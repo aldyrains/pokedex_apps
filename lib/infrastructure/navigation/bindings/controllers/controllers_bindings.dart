@@ -1,1 +1,2 @@
 export 'package:pokedex_apps/infrastructure/navigation/bindings/controllers/home.controller.binding.dart'; 
+export 'package:pokedex_apps/infrastructure/navigation/bindings/controllers/detail.controller.binding.dart';
