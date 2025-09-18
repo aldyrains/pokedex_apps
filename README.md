@@ -5,16 +5,7 @@ Aplikasi Pokedex sederhana berbasis Flutter yang memanfaatkan GraphQL Pokemon AP
 
 ---
 
-## Fitur
-
-* Infinite scroll list of Pokemons (pagination menggunakan `take` & `offset`).
-* Pokemon detail page (informasi dasar, attacks, evolutions jika tersedia).
-* Struktur modular & binding GetX untuk routing dan dependency injection.
-* Error handling dan loading states.
-
-(Opsional yang belum diimplementasikan bisa berupa filter by type, caching persisten, offline support.)
-
----
+ 
 
 ## Struktur proyek (singkat)
 
@@ -23,11 +14,14 @@ Struktur ini merefleksikan folder yang ada di `lib/`:
 ```
 lib/
   domain/
-    core/interfaces/
+    core/
+      constants/
+      interfaces/
+      utils/
   infrastructure/
     dal/
-      daos/
-    services/
+      repositories/
+      services/
   navigation/
     bindings/
       controllers_bindings.dart
@@ -115,52 +109,62 @@ https://graphql-pokemon2.vercel.app/
 Contoh query pagination (ambil 20):
 
 ```graphql
-query getPokemons($take: Int!, $offset: Int!) {
-  getAllPokemon(take: $take, offset: $offset) {
-    id
-    number
-    name
-    image
-    types
-    classification
-  }
-}
+query pokemons($first: Int!) {
+      pokemons(first: $first) {
+        id
+        number
+        name
+        image
+        types
+      }
+    }
 ```
 
 Contoh query detail:
 
 ```graphql
-query getPokemon($name: String) {
-  pokemon(name: $name) {
-    id
-    number
-    name
-    image
-    types
-    classification
-    maxCP
-    maxHP
-    attacks {
-      fast { name type damage }
-      special { name type damage }
+query pokemon($name: String!) {
+      pokemon(name: $name) {
+        id
+        number
+        name
+        image
+        classification
+        maxHP
+        maxCP
+        types
+        resistant
+        weaknesses
+        height {
+          minimum
+          maximum
+        }
+        weight {
+          minimum
+          maximum
+        }
+        attacks {
+          fast {
+            name
+            type
+            damage
+          }
+          special {
+            name
+            type
+            damage
+          }
+        }
+        evolutions {
+          id
+          number
+          name
+          image
+        }
+      }
     }
-    evolutions { id number name image types }
-  }
-}
 ```
 
-**Catatan tentang filter**: API ini menyediakan `take` dan `offset`. Jika ingin filter by `types` dan server tidak mendukung filter, filter dapat dilakukan client-side (dengan tradeoff: lebih banyak data ditransfer). Selalu batasi field yang di-request untuk mengurangi payload.
-
----
-
-## Implementasi pagination (catatan teknis)
-
-* Gunakan `ScrollController` pada screen list.
-* Trigger `loadNext()` saat posisi scroll mendekati bottom.
-* Controller menjaga `isLoading`, `offset`, `take`, `hasMore`.
-* Jika batch yang diterima < `take`, set `hasMore = false`.
-
----
 
 ## Testing
 
@@ -169,3 +173,19 @@ Jalankan unit & widget test:
 ```bash
 flutter test
 ```
+
+## App preview
+
+![Splashscreen](screenshots/splashscreen.jpg "Splashscreen")
+![Home](screenshots/home.jpg "home")
+![Home](screenshots/filter.jpg "filter")
+![Home](screenshots/afterfilteryellow.jpg "after filter")
+![Home](screenshots/afterfiltergreen.jpg "after filter")
+![Detail - about](screenshots/about.jpg "Detail About")
+![Detail - base stats](screenshots/basestate.jpg "Detail Base State")
+![Detail - Evolution](screenshots/evolutions.jpg "Pokemon Detail - Evolution")
+![Detail - Evolution](screenshots/evolutions1.jpg "Pokemon Detail - Evolution")
+![Detail - Evolution expanded](screenshots/evolutions2.jpg "Pokemon Detail - Evolution expanded")
+![Pokemon Info - Base Stats (Expanded)](screenshots/pokemon-info-expanded.png "Pokemon Info - Base Stats (Expanded)")
+
+## created by: Aldi Riansyah 👨‍💻
