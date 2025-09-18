@@ -10,16 +10,28 @@ import 'package:shimmer/shimmer.dart';
 import 'controllers/detail.controller.dart';
 
 class DetailScreen extends GetView<DetailController> {
-  final String name;
 
-  const DetailScreen({super.key, required this.name});
+  const DetailScreen({super.key, required name});
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Obx(() {
-      if (controller.isLoading.value && controller.pokemon.isEmpty) {
-        return const Center(child: PikaLoadingIndicator());
+
+      if (controller.isLoading.value && controller.pokemon.value == null) {
+        return const Scaffold(
+          body: Center(child: PikaLoadingIndicator()),
+        );
       }
+
+      final p = controller.pokemon.value;
+
+      if (p == null) {
+        return const Scaffold(
+          body: Center(child: Text('Data tidak tersedia')),
+        );
+      }
+
       return PokeballScaffold(
         backgroundColor: controller.bgColor.value,
         body: Stack(
@@ -32,6 +44,7 @@ class DetailScreen extends GetView<DetailController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -56,68 +69,74 @@ class DetailScreen extends GetView<DetailController> {
                   ),
                   const SizedBox(height: 16),
 
+                  // Name
                   Text(
-                    controller.pokemonName,
+                    p.name,
                     style: const TextStyle(
                       fontSize: 35,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
+
+                  // Number
                   Text(
-                    "#${controller.number}",
+                    "#${p.number}",
                     style: const TextStyle(fontSize: 18, color: Colors.white70),
                   ),
                   const SizedBox(height: 8),
 
-                  Wrap(
-                    spacing: 8,
-                    children:
-                        controller.types
-                            .map(
-                              (t) => Chip(
-                                label: Text(
-                                  t,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                backgroundColor: controller.bgColor.value
-                                    .withOpacity(0.7),
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                visualDensity: VisualDensity.compact,
-                                padding: EdgeInsets.zero,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                  // Types chips (controller.types is reactive RxList)
+                  Obx(() {
+                    return Wrap(
+                      spacing: 8,
+                      children: controller.types
+                          .map(
+                            (t) => Chip(
+                              label: Text(
+                                t,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            )
-                            .toList(),
-                  ),
+                              backgroundColor:
+                                  controller.bgColor.value.withOpacity(0.7),
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              visualDensity: VisualDensity.compact,
+                              padding: EdgeInsets.zero,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    );
+                  }),
                 ],
               ),
             ),
 
+            // Bottom sheet with tabs
             Positioned(
               top: 400,
               left: 0,
               right: 0,
               child: Container(
-                height: MediaQuery.of(context).size.height - 300,
+                height: size.height - 300,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2),
                       blurRadius: 10,
-                      offset: Offset(0, -10),
+                      offset: const Offset(0, -10),
                     ),
                   ],
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
                 ),
                 child: DefaultTabController(
                   length: 3,
@@ -139,7 +158,7 @@ class DetailScreen extends GetView<DetailController> {
                           unselectedLabelStyle: const TextStyle(
                             fontFamily: 'Baloo2',
                           ),
-                          tabs: [
+                          tabs: const [
                             Tab(text: "About"),
                             Tab(text: "Base Stats"),
                             Tab(text: "Evolutions"),
@@ -148,10 +167,10 @@ class DetailScreen extends GetView<DetailController> {
                       }),
                       Expanded(
                         child: TabBarView(
-                          children: [
-                            PokemonInfoCardAbout(), // file yg kamu upload
-                            PokemonInfoCardBaseStat(), // file yg kamu upload
-                            PokemonInfoCardEvolution(), // file yg kamu upload
+                          children: const [
+                            PokemonInfoCardAbout(),
+                            PokemonInfoCardBaseStat(),
+                            PokemonInfoCardEvolution(),
                           ],
                         ),
                       ),
@@ -161,33 +180,32 @@ class DetailScreen extends GetView<DetailController> {
               ),
             ),
 
+            // Center image with hero
             Positioned(
               top: 190,
               left: 0,
               right: 0,
               child: Center(
                 child: Hero(
-                  tag: controller.heroTag,
+                  tag: p.heroTag,
                   child: CachedNetworkImage(
-                    imageUrl: controller.image,
-                    height: context.mediaQuery.size.width * 0.6,
+                    imageUrl: p.image ?? '',
+                    height: size.width * 0.6,
                     fit: BoxFit.contain,
-                    placeholder:
-                        (context, url) => Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: Container(
-                            height: context.mediaQuery.size.width * 0.6,
-                            width: context.mediaQuery.size.width * 0.6,
-                            color: Colors.white,
-                          ),
-                        ),
-                    errorWidget:
-                        (context, url, error) => const Icon(
-                          Icons.broken_image,
-                          size: 100,
-                          color: Colors.grey,
-                        ),
+                    placeholder: (context, url) => Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        height: size.width * 0.6,
+                        width: size.width * 0.6,
+                        color: Colors.white,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => const Icon(
+                      Icons.broken_image,
+                      size: 100,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),

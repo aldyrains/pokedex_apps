@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_apps/infrastructure/theme/colors.dart';
-import 'package:pokedex_apps/infrastructure/theme/styles.dart';
 import 'package:pokedex_apps/infrastructure/theme/themes.dart';
 
 class DarkAppTheme extends AppTheme {
@@ -25,15 +24,6 @@ class DarkAppTheme extends AppTheme {
             textOnPrimary: Color(0xFFFFFFFF),
             border: Color(0x33FFFFFF),
             hint: Color(0x99FFFFFF),
-          ),
-          styles: const AppThemeStyles(
-            cardShadow: [
-              BoxShadow(
-                color: Color(0x4D000000),
-                offset: Offset(0, 8),
-                blurRadius: 23,
-              ),
-            ],
           ),
         );
 }
