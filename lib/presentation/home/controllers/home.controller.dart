@@ -2,9 +2,10 @@ import 'package:get/get.dart';
 import 'package:pokedex_apps/domain/core/utils/pokemon_image_utils.dart';
 import 'package:pokedex_apps/infrastructure/dal/services/pokemon_service.dart';
 import 'package:pokedex_apps/infrastructure/navigation/routes.dart';
+import 'package:pokedex_apps/domain/core/utils/strings.dart';
 
 class HomeController extends GetxController {
-  final PokemonService service;
+  final PokemonServiceApi service;
   HomeController(this.service);
 
   var pokemons = <Map<String, dynamic>>[].obs;
@@ -30,16 +31,17 @@ class HomeController extends GetxController {
 
       final result = await service.getPokemons(limit);
 
-      final finalList = result.map((item) {
-        final map = Map<String, dynamic>.from(item);
-        final number = (map['number'] ?? '').toString();
-        final graphqlUrl = (map['image'] ?? '').toString();
+      final finalList =
+          result.map((item) {
+            final map = Map<String, dynamic>.from(item);
+            final number = (map['number'] ?? '').toString();
+            final graphqlUrl = (map['image'] ?? '').toString();
 
-        final official = buildOfficialPokedexUrl(number);
-        map['resolvedImage'] = official;
-        map['graphqlImage'] = graphqlUrl;
-        return map;
-      }).toList();
+            final official = buildOfficialPokedexUrl(number);
+            map['resolvedImage'] = official;
+            map['graphqlImage'] = graphqlUrl;
+            return map;
+          }).toList();
 
       pokemons.assignAll(finalList);
 
@@ -69,14 +71,15 @@ class HomeController extends GetxController {
       }
 
       final newItemsRaw = result.sublist(pokemons.length);
-      final newFinalItems = newItemsRaw.map((item) {
-        final map = Map<String, dynamic>.from(item);
-        final number = (map['number'] ?? '').toString();
-        final graphqlUrl = (map['image'] ?? '').toString();
-        map['resolvedImage'] = buildOfficialPokedexUrl(number);
-        map['graphqlImage'] = graphqlUrl;
-        return map;
-      }).toList();
+      final newFinalItems =
+          newItemsRaw.map((item) {
+            final map = Map<String, dynamic>.from(item);
+            final number = (map['number'] ?? '').toString();
+            final graphqlUrl = (map['image'] ?? '').toString();
+            map['resolvedImage'] = buildOfficialPokedexUrl(number);
+            map['graphqlImage'] = graphqlUrl;
+            return map;
+          }).toList();
 
       pokemons.addAll(newFinalItems);
 
@@ -90,6 +93,7 @@ class HomeController extends GetxController {
   }
 
   void goToDetail(String name) {
-    Get.toNamed(Routes.DETAIL, arguments: {'name': name});
+    Get.toNamed(Routes.DETAIL,
+     arguments: {PokeStrings.argName: name});
   }
 }

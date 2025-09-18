@@ -6,9 +6,7 @@ import '../../../../presentation/home/controllers/home.controller.dart';
 class HomeControllerBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<HomeController>(
-      () => HomeController(Get.find()),
-    );
-     Get.lazyPut<PokemonService>(() => PokemonService());
+    Get.lazyPut<PokemonServiceApi>(() => PokemonService());
+    Get.lazyPut<HomeController>(() => HomeController(Get.find()));
   }
 }

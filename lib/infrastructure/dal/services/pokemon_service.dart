@@ -1,7 +1,12 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:pokedex_apps/domain/core/utils/strings.dart';
 
-class PokemonService {
+abstract class PokemonServiceApi {
+  Future<List<Map<String, dynamic>>> getPokemons(int first);
+  Future<Map<String, dynamic>?> getPokemonDetail(String name);
+}
+
+class PokemonService implements PokemonServiceApi {
   late final GraphQLClient client;
 
   PokemonService() {
@@ -13,6 +18,7 @@ class PokemonService {
     );
   }
 
+  @override
   Future<List<Map<String, dynamic>>> getPokemons(int first) async {
     const query = r'''
       query pokemons($first: Int!) {
@@ -43,6 +49,7 @@ class PokemonService {
         .toList();
   }
 
+  @override
   Future<Map<String, dynamic>?> getPokemonDetail(String name) async {
     const query = r'''
       query pokemon($name: String!) {
@@ -86,10 +93,7 @@ class PokemonService {
     ''';
 
     final result = await client.query(
-      QueryOptions(
-        document: gql(query),
-        variables: {"name": name},
-      ),
+      QueryOptions(document: gql(query), variables: {"name": name}),
     );
 
     if (result.hasException) {

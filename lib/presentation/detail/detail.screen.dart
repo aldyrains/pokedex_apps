@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pokedex_apps/infrastructure/theme/colors.dart';
-import 'package:pokedex_apps/infrastructure/theme/extensions.dart';
+import 'package:pokedex_apps/domain/core/utils/strings.dart';
 import 'package:pokedex_apps/presentation/widgets/loading.dart';
 import 'package:pokedex_apps/presentation/widgets/scaffold.dart';
 import 'package:shimmer/shimmer.dart';
@@ -17,13 +16,9 @@ class DetailScreen extends GetView<DetailController> {
   Widget build(BuildContext context) {
     controller.fetchPokemonDetail(name);
     return Obx(() {
-      if (controller.isLoading.value) {
-        return const Center(child: PikaLoadingIndicator());
-      }
-      if (controller.pokemon.isEmpty) {
-        return const Center(child: Text("No data"));
-      }
-
+       if (controller.isLoading.value && controller.pokemon.isEmpty) {
+          return const Center(child: PikaLoadingIndicator());
+        }
       return PokeballScaffold(
         backgroundColor: controller.bgColor.value,
         body: Stack(
@@ -101,7 +96,7 @@ class DetailScreen extends GetView<DetailController> {
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
                 ),
-                child: Text('data'),
+                child: Text(PokeStrings.placeholderData),
               ),
             ),
 

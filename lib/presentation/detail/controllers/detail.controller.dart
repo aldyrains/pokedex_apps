@@ -5,7 +5,7 @@ import 'package:pokedex_apps/infrastructure/dal/services/pokemon_service.dart';
 import 'package:pokedex_apps/infrastructure/theme/colors.dart';
 
 class DetailController extends GetxController {
-  final PokemonService service;
+  final PokemonServiceApi service;
   var pokemon = <String, dynamic>{}.obs;
   var isLoading = false.obs;
   var types = <String>[];

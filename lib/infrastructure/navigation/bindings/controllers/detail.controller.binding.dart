@@ -5,9 +5,7 @@ import 'package:pokedex_apps/presentation/detail/controllers/detail.controller.d
 class DetailControllerBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<DetailController>(
-      () => DetailController(Get.find()),
-    );
-     Get.lazyPut<PokemonService>(() => PokemonService());
+    Get.lazyPut<PokemonServiceApi>(() => PokemonService());
+    Get.lazyPut<DetailController>(() => DetailController(Get.find()));
   }
 }

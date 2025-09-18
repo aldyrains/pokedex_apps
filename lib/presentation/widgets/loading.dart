@@ -10,6 +10,7 @@ class PikaLoadingIndicator extends StatelessWidget {
       child: Image.asset(
       PokeStrings.pikaLoader,
         fit: BoxFit.contain,
+        height: 45,
       ),
     );
   }
