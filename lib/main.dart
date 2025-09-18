@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:get/get.dart';
 
@@ -12,7 +13,7 @@ void main() async {
 
 class Main extends StatelessWidget {
   final String initialRoute;
-  Main(this.initialRoute);
+  const Main(this.initialRoute, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,22 @@ class Main extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: initialRoute,
       getPages: Nav.routes,
+      theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme().copyWith(
+          bodyLarge: GoogleFonts.poppins(),
+          bodyMedium: GoogleFonts.poppins(),
+          bodySmall: GoogleFonts.poppins(),
+          titleLarge: GoogleFonts.fredoka(fontWeight: FontWeight.w600),
+          titleMedium: GoogleFonts.fredoka(fontWeight: FontWeight.w600),
+          titleSmall: GoogleFonts.fredoka(fontWeight: FontWeight.w600),
+          displayLarge: GoogleFonts.fredoka(),
+          displayMedium: GoogleFonts.fredoka(),
+          displaySmall: GoogleFonts.fredoka(),
+          labelLarge: GoogleFonts.baloo2(),
+          labelMedium: GoogleFonts.baloo2(),
+          labelSmall: GoogleFonts.baloo2(),
+        ),
+      ),
     );
   }
 }

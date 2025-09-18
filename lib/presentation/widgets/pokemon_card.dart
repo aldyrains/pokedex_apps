@@ -7,8 +7,7 @@ class PokemonCard extends StatelessWidget {
   final String name;
   final String number;
   final String image; 
-  final String?
-  resolvedImage; 
+  final String? resolvedImage; 
   final List<String> types;
   final VoidCallback onTap;
 
@@ -21,8 +20,6 @@ class PokemonCard extends StatelessWidget {
     required this.types,
     required this.onTap,
   }) : super(key: key);
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +39,13 @@ class PokemonCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0, left: 8.0,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 16.0, left: 8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -59,57 +56,54 @@ class PokemonCard extends StatelessWidget {
                                 fontSize: 22,
                                 color: Colors.white,
                               ),
+                              overflow: TextOverflow.visible,
+                              softWrap: true,
                             ),
-                            const SizedBox(height: 20),
-                            Column(
+                            const SizedBox(height: 10),
+                            Wrap(
                               spacing: 4,
-                              children:
-                                  types
-                                      .map(
-                                        (t) => Chip(
-                                          label: Text(
-                                            t,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          backgroundColor: bg.withOpacity(0.7),
-                                          materialTapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
-                                              visualDensity: VisualDensity.compact,
-                                          padding: EdgeInsets.zero,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                          ),
+                              children: types
+                                  .map(
+                                    (t) => Chip(
+                                      label: Text(
+                                        t,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      )
-                                      .toList(),
+                                      ),
+                                      backgroundColor: bg.withOpacity(0.7),
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      visualDensity: VisualDensity.compact,
+                                      padding: EdgeInsets.zero,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
                             ),
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(
-                          "#$number",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.white70,
-                          ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        "#$number",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white70,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-
                 const SizedBox(height: 8),
               ],
             ),
-
             Positioned(
               bottom: 0,
               right: 0,

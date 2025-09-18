@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pokedex_apps/presentation/detail/controllers/detail.controller.dart';
 
 class PokemonInfoCardBaseStat extends StatelessWidget {
@@ -23,7 +24,15 @@ class PokemonInfoCardBaseStat extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          SizedBox(width: 40, child: Text(value.toString())),
+          SizedBox(
+            width: 60,
+            child: Text(
+              value.toString(),
+              style: GoogleFonts.pressStart2p(fontSize: 10),
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: ClipRRect(
@@ -54,7 +63,11 @@ class PokemonInfoCardBaseStat extends StatelessWidget {
         children: [
           const Text(
             'Base Stats',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Fredoka',
+            ),
           ),
           const SizedBox(height: 16),
           bar('Max HP', controller.maxHP, 500),
@@ -63,7 +76,11 @@ class PokemonInfoCardBaseStat extends StatelessWidget {
           const SizedBox(height: 24),
           const Text(
             'Attacks',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Fredoka',
+            ),
           ),
           const SizedBox(height: 8),
           Text('Fast', style: TextStyle(color: Colors.black.withOpacity(0.6))),
@@ -79,7 +96,21 @@ class PokemonInfoCardBaseStat extends StatelessWidget {
             return fast.map((a) {
               final name = (a['name'] ?? '').toString();
               final dmg = int.tryParse((a['damage'] ?? '0').toString()) ?? 0;
-              return attackRow(name, dmg, maxVal);
+              return Row(
+                children: [
+                  Expanded(child: attackRow(name, dmg, maxVal)),
+                  const SizedBox(width: 8),
+                  Text(
+                    'DMG',
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    dmg.toString(),
+                    style: GoogleFonts.pressStart2p(fontSize: 10),
+                  ),
+                ],
+              );
             }).toList();
           })(),
           const SizedBox(height: 12),
@@ -99,7 +130,21 @@ class PokemonInfoCardBaseStat extends StatelessWidget {
             return special.map((a) {
               final name = (a['name'] ?? '').toString();
               final dmg = int.tryParse((a['damage'] ?? '0').toString()) ?? 0;
-              return attackRow(name, dmg, maxVal);
+              return Row(
+                children: [
+                  Expanded(child: attackRow(name, dmg, maxVal)),
+                  const SizedBox(width: 8),
+                  Text(
+                    'DMG',
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    dmg.toString(),
+                    style: GoogleFonts.pressStart2p(fontSize: 10),
+                  ),
+                ],
+              );
             }).toList();
           })(),
         ],

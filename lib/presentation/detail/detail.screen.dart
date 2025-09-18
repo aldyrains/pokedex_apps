@@ -62,6 +62,7 @@ class DetailScreen extends GetView<DetailController> {
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
+                      fontFamily: 'Fredoka',
                     ),
                   ),
                   Text(
@@ -131,6 +132,13 @@ class DetailScreen extends GetView<DetailController> {
                               color: controller.bgColor.value,
                               width: 3,
                             ),
+                          ),
+                          labelStyle: const TextStyle(
+                            fontFamily: 'Baloo2',
+                            fontWeight: FontWeight.w600,
+                          ),
+                          unselectedLabelStyle: const TextStyle(
+                            fontFamily: 'Baloo2',
                           ),
                           tabs: [
                             Tab(text: "About"),

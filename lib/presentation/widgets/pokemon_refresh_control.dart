@@ -14,17 +14,24 @@ class PokemonRefreshIndicator extends StatefulWidget {
   });
 
   @override
-  State<PokemonRefreshIndicator> createState() => _CustomRefreshIndicatorState();
+  State<PokemonRefreshIndicator> createState() =>
+      _CustomRefreshIndicatorState();
 }
 
 class _CustomRefreshIndicatorState extends State<PokemonRefreshIndicator> {
   bool _isRefreshing = false;
 
   Future<void> _handleRefresh() async {
+    if (!mounted) return;
     setState(() => _isRefreshing = true);
-    await widget.onRefresh();
-    await Future.delayed(const Duration(milliseconds: 400));
-    setState(() => _isRefreshing = false);
+   try {
+      await widget.onRefresh();
+      await Future.delayed(const Duration(milliseconds: 400));
+    } finally {
+      if (mounted) {
+        setState(() => _isRefreshing = false);
+      }
+    }
   }
 
   @override
@@ -40,11 +47,7 @@ class _CustomRefreshIndicatorState extends State<PokemonRefreshIndicator> {
         alignment: Alignment.topCenter,
         children: [
           widget.child,
-          if (_isRefreshing)
-            Positioned(
-              
-              top: 23,
-              child: PikaLoadingIndicator(),),
+          if (_isRefreshing) Positioned(top: 23, child: PikaLoadingIndicator()),
         ],
       ),
     );
