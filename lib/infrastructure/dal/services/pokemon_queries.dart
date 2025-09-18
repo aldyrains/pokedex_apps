@@ -19,6 +19,8 @@ class PokemonQueries {
         name
         image
         classification
+        maxHP
+        maxCP
         types
         resistant
         weaknesses

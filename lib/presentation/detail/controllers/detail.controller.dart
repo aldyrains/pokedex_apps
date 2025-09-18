@@ -69,9 +69,25 @@ class DetailController extends GetxController {
       (p["abilities"] as List).map((a) => a.toString()).toList();
   List<Map<String, dynamic>> get stats =>
       (p["stats"] as List).map((s) => Map<String, dynamic>.from(s)).toList();
+  int get maxHP =>
+      (p["maxHP"] ?? 0) is int
+          ? p["maxHP"] as int
+          : int.tryParse((p["maxHP"] ?? '0').toString()) ?? 0;
+  int get maxCP =>
+      (p["maxCP"] ?? 0) is int
+          ? p["maxCP"] as int
+          : int.tryParse((p["maxCP"] ?? '0').toString()) ?? 0;
   List<Map<String, dynamic>> get evolutions =>
       (p["evolutions"] as List)
           .map((e) => Map<String, dynamic>.from(e))
+          .toList();
+  List<Map<String, dynamic>> get fastAttacks =>
+      (p["attacks"]?['fast'] as List? ?? const [])
+          .map((a) => Map<String, dynamic>.from(a as Map))
+          .toList();
+  List<Map<String, dynamic>> get specialAttacks =>
+      (p["attacks"]?['special'] as List? ?? const [])
+          .map((a) => Map<String, dynamic>.from(a as Map))
           .toList();
 
   void toggleFavorite() {

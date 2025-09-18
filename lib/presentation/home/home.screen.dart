@@ -15,126 +15,141 @@ class HomeScreen extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return PokeballScaffold(
-      backgroundColor: context.colors.background,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          _showFilterBottomSheet(context);
-        },
-        icon: const Icon(Icons.filter_list),
-        label: const Text('Filter'),
-      ),
-      body: Obx(() {
-        if (controller.isLoading.value && controller.pokemons.isEmpty) {
-          return const Center(child: PikaLoadingIndicator());
-        }
+    return Obx(() {
+      final sel = controller.selectedType.value;
+      final bg = sel.isEmpty ? context.colors.background : backgroundColor(sel);
+      return PokeballScaffold(
+        backgroundColor: bg.withOpacity(0.9),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => _showFilterBottomSheet(context),
+          icon: Icon(Icons.filter_list, size: 20, color: sel.isEmpty ? Colors.black : Colors.white),
+          label: Text(
+            'Filter',
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: sel.isEmpty ? Colors.black : Colors.white),
+          ),
+          backgroundColor: bg,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+          elevation: 3,
+        ),
+        body: Obx(() {
+          if (controller.isLoading.value && controller.pokemons.isEmpty) {
+            return const Center(child: PikaLoadingIndicator());
+          }
 
-        return Stack(
-          children: [
-            NestedScrollView(
-              headerSliverBuilder:
-                  (_, __) => [
-                    AppMovingTitleSliverAppBar(title: PokeStrings.homeTitle),
-                  ],
-              body: NotificationListener<ScrollNotification>(
-                onNotification: (scroll) {
-                  if (scroll.metrics.pixels == scroll.metrics.maxScrollExtent) {
-                    controller.loadMore();
-                  }
-                  return true;
-                },
-                child: PokemonRefreshIndicator(
-                  onRefresh: () async {
-                    await controller.fetchPokemons();
+          return Stack(
+            children: [
+              NestedScrollView(
+                headerSliverBuilder:
+                    (_, __) => [
+                      AppMovingTitleSliverAppBar(title: PokeStrings.homeTitle),
+                    ],
+                body: NotificationListener<ScrollNotification>(
+                  onNotification: (scroll) {
+                    if (scroll.metrics.pixels ==
+                        scroll.metrics.maxScrollExtent) {
+                      controller.loadMore();
+                    }
+                    return true;
                   },
-                  indicator: const PikaLoadingIndicator(),
-                  child: Obx(() {
-                    final filtered = controller.filteredPokemons;
-                    final isLoadingMore = controller.isMoreLoading.value;
-                    final itemCount = filtered.length + (isLoadingMore ? 1 : 0);
+                  child: PokemonRefreshIndicator(
+                    onRefresh: () async {
+                      await controller.fetchPokemons();
+                    },
+                    indicator: const PikaLoadingIndicator(),
+                    child: Obx(() {
+                      final filtered = controller.filteredPokemons;
+                      final isLoadingMore = controller.isMoreLoading.value;
+                      final itemCount =
+                          filtered.length + (isLoadingMore ? 1 : 0);
 
-                    return CustomScrollView(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-                            child: Obx(() {
-                              final sel = controller.selectedType.value;
-                              if (sel.isEmpty) return const SizedBox.shrink();
-                              return Align(
-                                alignment: Alignment.centerLeft,
-                                child: InputChip(
-                                  label: Text('Type: $sel'),
-                                  onDeleted:
-                                      () => controller.setSelectedType(''),
-                                ),
-                              );
-                            }),
+                      return CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                              child: Obx(() {
+                                final sel = controller.selectedType.value;
+                                if (sel.isEmpty) return const SizedBox.shrink();
+                                return Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: InputChip(
+                                    label: Text('Type: $sel'),
+                                    onDeleted:
+                                        () => controller.setSelectedType(''),
+                                  ),
+                                );
+                              }),
+                            ),
                           ),
-                        ),
-                        SliverPadding(
-                          padding: const EdgeInsets.all(12),
-                          sliver: SliverGrid(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: .9,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 12,
-                                ),
-                            delegate: SliverChildBuilderDelegate((
-                              context,
-                              index,
-                            ) {
-                              if (index < filtered.length) {
-                                final p = filtered[index];
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.4),
-                                        spreadRadius: 1,
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 4),
+                          SliverPadding(
+                            padding: const EdgeInsets.all(12),
+                            sliver: SliverGrid(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: .9,
+                                    crossAxisSpacing: 12,
+                                    mainAxisSpacing: 12,
+                                  ),
+                              delegate: SliverChildBuilderDelegate((
+                                context,
+                                index,
+                              ) {
+                                if (index < filtered.length) {
+                                  final p = filtered[index];
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.4),
+                                          spreadRadius: 1,
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: PokemonCard(
+                                      name: p['name'] ?? '',
+                                      number: p['number'] ?? '',
+                                      image:
+                                          p["resolvedImage"] ??
+                                          p["graphqlImage"] ??
+                                          "",
+                                      types: List<String>.from(
+                                        p['types'] ?? [],
                                       ),
-                                    ],
-                                  ),
-                                  child: PokemonCard(
-                                    name: p['name'] ?? '',
-                                    number: p['number'] ?? '',
-                                    image:
-                                        p["resolvedImage"] ??
-                                        p["graphqlImage"] ??
-                                        "",
-                                    types: List<String>.from(p['types'] ?? []),
-                                    onTap: () {
-                                      controller.goToDetail(p['name'] ?? '');
-                                    },
-                                  ),
-                                );
-                              } else {
-                                return const Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: PikaLoadingIndicator(),
-                                  ),
-                                );
-                              }
-                            }, childCount: itemCount),
+                                      onTap: () {
+                                        controller.goToDetail(p['name'] ?? '');
+                                      },
+                                    ),
+                                  );
+                                } else {
+                                  return const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(16),
+                                      child: PikaLoadingIndicator(),
+                                    ),
+                                  );
+                                }
+                              }, childCount: itemCount),
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  }),
+                        ],
+                      );
+                    }),
+                  ),
                 ),
               ),
-            ),
-          ],
-        );
-      }),
-    );
+            ],
+          );
+        }),
+      );
+    });
   }
 
   void _showFilterBottomSheet(BuildContext context) {

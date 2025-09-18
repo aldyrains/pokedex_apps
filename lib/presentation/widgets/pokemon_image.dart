@@ -2,24 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class PokemonImage extends StatelessWidget {
-  /// resolvedImage: hasil akhir yang sudah kamu set di controller.
+ 
   final String? resolvedImage;
 
-  /// graphqlImage: image URL asli dari GraphQL, dipakai sebagai fallback terakhir.
   final String? graphqlImage;
 
-  /// optional hero tag (misal: 'pokemon-25') untuk hero animation
   final String? heroTag;
 
   final double? width;
   final double? height;
   final BoxFit fit;
 
-  /// Jika ingin gambar sedikit transparan, set 0.0 - 1.0 (1.0 = opaque)
   final double opacity;
 
-  /// Jika ingin tint warna lembut di atas gambar, set warna ini.
-  /// Tint akan diaplikasikan menggunakan BlendMode.modulate secara default.
   final Color? tintColor;
   final BlendMode tintBlend;
 
@@ -60,7 +55,6 @@ class PokemonImage extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
-      // apply tint only if provided, with safe blend mode
       color: tintColor,
       colorBlendMode: tintColor != null ? tintBlend : null,
     );
@@ -78,7 +72,6 @@ class PokemonImage extends StatelessWidget {
         placeholder: (c, u) => placeholder ?? const SizedBox.shrink(),
         errorWidget: (c, u, e) => errorWidget ?? const Icon(Icons.broken_image),
         imageBuilder: (context, imageProvider) {
-          // build Image from provider, apply tint if requested, then opacity
           final img = Image(
             image: imageProvider,
             width: width,
@@ -109,8 +102,6 @@ class PokemonImage extends StatelessWidget {
     if (fallback.isNotEmpty) {
       return _buildNetwork(fallback);
     }
-
-    // nothing available -> placeholder/error
     final p = placeholder ??
         Container(
           width: width,
