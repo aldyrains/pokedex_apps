@@ -1,10 +1,26 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:pokedex_apps/domain/core/utils/pokemon_image_utils.dart';
 import 'package:pokedex_apps/domain/core/interfaces/pokemon_repository.dart';
 import 'package:pokedex_apps/infrastructure/navigation/routes.dart';
 import 'package:pokedex_apps/domain/core/utils/strings.dart';
 import 'package:pokedex_apps/domain/core/constants/pokemon_types.dart';
 
+
+List<Map<String, dynamic>> _mapPokemonList(List<dynamic> raw) {
+  return raw.map<Map<String, dynamic>>((item) {
+    final map = Map<String, dynamic>.from(item as Map);
+    final number = (map['number'] ?? '').toString();
+    final graphqlUrl = (map['image'] ?? '').toString();
+    final padded = number.replaceAll(RegExp(r'[^0-9]'), '');
+    final padded3 = (int.tryParse(padded) != null) ? int.parse(padded).toString().padLeft(3, '0') : number;
+    final official = 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/$padded3.png';
+    map['resolvedImage'] = official;
+    map['graphqlImage'] = graphqlUrl;
+    return map;
+  }).toList(growable: false);
+}
 class HomeController extends GetxController {
   final PokemonRepository repository;
   HomeController(this.repository);
@@ -26,78 +42,70 @@ class HomeController extends GetxController {
     fetchPokemons();
   }
 
-  Future<void> fetchPokemons() async {
-    try {
-      isLoading.value = true;
-      hasMore = true;
-      limit = pageSize;
+  
 
-      final result = await repository.getPokemons(first: limit);
+ Future<void> fetchPokemons() async {
+  try {
+    isLoading.value = true;
+    hasMore = true;
+    limit = pageSize;
 
-      final finalList =
-          result.map((item) {
-            final map = Map<String, dynamic>.from(item);
-            final number = (map['number'] ?? '').toString();
-            final graphqlUrl = (map['image'] ?? '').toString();
+    final rawResult = await repository.getPokemons(first: limit).timeout(
+      const Duration(seconds: 20),
+      onTimeout: () {
+        throw TimeoutException("Request timeout");
+      },
+    );
 
-            final official = buildOfficialPokedexUrl(number);
-            map['resolvedImage'] = official;
-            map['graphqlImage'] = graphqlUrl;
-            return map;
-          }).toList();
+    final finalList = await compute(_mapPokemonList, rawResult);
 
-      pokemons.assignAll(finalList);
+    pokemons.assignAll(finalList);
 
-      // using predefined types
+    if (rawResult.length < limit) hasMore = false;
+  } catch (e, st) {
+    print("fetchPokemons error: $e\n$st");
+    hasMore = false;
+  } finally {
+    isLoading.value = false;
+  }
+}
 
-      if (result.length < limit) hasMore = false;
-    } catch (e, st) {
-      print("fetchPokemons error: $e\n$st");
+ Future<void> loadMore() async {
+  if (!hasMore) return;
+  if (_loadingMoreLock) return;
+
+  _loadingMoreLock = true;
+  isMoreLoading.value = true;
+
+  try {
+    final int newLimit = (limit + pageSize).clamp(pageSize, 200);
+    limit = newLimit;
+
+    final rawResult = await repository.getPokemons(first: limit).timeout(
+      const Duration(seconds: 20),
+      onTimeout: () {
+        throw TimeoutException("Request timeout");
+      },
+    );
+
+    if (rawResult.length <= pokemons.length) {
       hasMore = false;
-    } finally {
-      isLoading.value = false;
+      return;
     }
+
+    final newItemsRaw = rawResult.sublist(pokemons.length);
+    final newFinalItems = await compute(_mapPokemonList, newItemsRaw);
+
+    pokemons.addAll(newFinalItems);
+
+    if (rawResult.length < limit) hasMore = false;
+  } catch (e, st) {
+    print("loadMore error: $e\n$st");
+  } finally {
+    isMoreLoading.value = false;
+    _loadingMoreLock = false;
   }
-
-  Future<void> loadMore() async {
-    if (!hasMore) return;
-    if (_loadingMoreLock) return;
-
-    _loadingMoreLock = true;
-    isMoreLoading.value = true;
-
-    try {
-      limit += pageSize;
-      final result = await repository.getPokemons(first: limit);
-
-      if (result.length <= pokemons.length) {
-        hasMore = false;
-        return;
-      }
-
-      final newItemsRaw = result.sublist(pokemons.length);
-      final newFinalItems =
-          newItemsRaw.map((item) {
-            final map = Map<String, dynamic>.from(item);
-            final number = (map['number'] ?? '').toString();
-            final graphqlUrl = (map['image'] ?? '').toString();
-            map['resolvedImage'] = buildOfficialPokedexUrl(number);
-            map['graphqlImage'] = graphqlUrl;
-            return map;
-          }).toList();
-
-      pokemons.addAll(newFinalItems);
-
-      // using predefined types
-
-      if (result.length < limit) hasMore = false;
-    } catch (e, st) {
-      print("loadMore error: $e\n$st");
-    } finally {
-      isMoreLoading.value = false;
-      _loadingMoreLock = false;
-    }
-  }
+}
 
   void goToDetail(String name) {
     Get.toNamed(Routes.DETAIL, arguments: {PokeStrings.argName: name});
@@ -123,8 +131,8 @@ class HomeController extends GetxController {
   }
 
   Future<void> _ensureFilteredMinimum() async {
-    const int desired = 20; // align with page size
-    int safety = 5; // prevent infinite loop
+    const int desired = 20; 
+    int safety = 5; 
     while (filteredPokemons.length < desired && hasMore && safety > 0) {
       await loadMore();
       safety--;

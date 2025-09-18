@@ -63,6 +63,11 @@ class PokemonImage extends StatelessWidget {
   }
 
   Widget _buildNetwork(String url) {
+    if (url.isEmpty || !url.startsWith('http')) {
+    return _maybeWrapHero(
+      errorWidget ?? const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+    );
+  }
     return _maybeWrapHero(
       CachedNetworkImage(
         imageUrl: url,
