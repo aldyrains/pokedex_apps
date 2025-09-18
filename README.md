@@ -176,16 +176,16 @@ flutter test
 
 ## App preview
 
-![Splashscreen](screenshots/splashscreen.jpg "Splashscreen")
-![Home](screenshots/home.jpg "home")
-![Home](screenshots/filter.jpg "filter")
-![Home](screenshots/afterfilteryellow.jpg "after filter")
-![Home](screenshots/afterfiltergreen.jpg "after filter")
-![Detail - about](screenshots/about.jpg "Detail About")
-![Detail - base stats](screenshots/basestate.jpg "Detail Base State")
-![Detail - Evolution](screenshots/evolutions.jpg "Pokemon Detail - Evolution")
-![Detail - Evolution](screenshots/evolutions1.jpg "Pokemon Detail - Evolution")
-![Detail - Evolution expanded](screenshots/evolutions2.jpg "Pokemon Detail - Evolution expanded")
-![Pokemon Info - Base Stats (Expanded)](screenshots/pokemon-info-expanded.png "Pokemon Info - Base Stats (Expanded)")
+<img src="screenshots/splashscreen.jpg" alt="Splashscreen" width="300"/>
+<img src="screenshots/home.jpg" alt="Home" width="300"/>
+<img src="screenshots/filter.jpg" alt="Filter" width="300"/>
+<img src="screenshots/afterfilteryellow.jpg" alt="After Filter Yellow" width="300"/>
+<img src="screenshots/afterfiltergreen.jpg" alt="After Filter Green" width="300"/>
+<img src="screenshots/about.jpg" alt="Detail About" width="300"/>
+<img src="screenshots/basestate.jpg" alt="Detail Base Stats" width="300"/>
+<img src="screenshots/evolutions.jpg" alt="Detail Evolution" width="300"/>
+<img src="screenshots/evolutions1.jpg" alt="Detail Evolution 1" width="300"/>
+<img src="screenshots/evolutions2.jpg" alt="Detail Evolution Expanded" width="300"/>
+
 
 ## created by: Aldi Riansyah 👨‍💻
