@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pokedex_apps/infrastructure/theme/extensions.dart';
 import 'package:pokedex_apps/presentation/widgets/app_bar.dart';
 import 'package:pokedex_apps/presentation/widgets/loading.dart';
 import 'package:pokedex_apps/presentation/widgets/scaffold.dart';
@@ -12,79 +13,99 @@ class HomeScreen extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return PokeballScaffold(
-      // appBar: AppBar(
-      //   title: const Text("Pokedex"),
-      //   centerTitle: false,
-      //   elevation: 0,
-      // ),
+      backgroundColor: context.colors.background,
       body: Obx(() {
         if (controller.isLoading.value && controller.pokemons.isEmpty) {
           return const Center(child: PikaLoadingIndicator());
         }
 
         return Stack(
-          children :[
+          children: [
             NestedScrollView(
-              headerSliverBuilder: (_, __) => [
-        AppMovingTitleSliverAppBar(title: 'Pokedex'),
-      ],
+              headerSliverBuilder:
+                  (_, __) => [AppMovingTitleSliverAppBar(title: 'Pokedex')],
               body: NotificationListener<ScrollNotification>(
-              onNotification: (scroll) {
-                if (scroll.metrics.pixels == scroll.metrics.maxScrollExtent) {
-                  controller.loadMore();
-                }
-                return true;
-              },
-              child: RefreshIndicator(
-                onRefresh: controller.fetchPokemons,
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: (scroll) {
-                    if (scroll.metrics.pixels == scroll.metrics.maxScrollExtent) {
-                      controller.loadMore();
-                    }
-                    return true;
-                  },
-                  child: Obx(() {
-                    final itemCount =
-                        controller.pokemons.length +
-                        (controller.isMoreLoading.value ? 1 : 0);
-                    return GridView.builder(
-                      padding: const EdgeInsets.all(12),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: .9,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
-                      itemCount: itemCount,
-                      itemBuilder: (context, index) {
-                        if (index < controller.pokemons.length) {
-                          final p = controller.pokemons[index];
-                          return PokemonCard(
-                            name: p['name'] ?? '',
-                            number: p['number'] ?? '',
-                            image: p['image'] ?? '',
-                            types: List<String>.from(p['types'] ?? []),
-                            onTap: () {
-                              controller.goToDetail(p['name'] ?? '');
-                            },
-                          );
-                        } else {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(16),
-                              child: PikaLoadingIndicator(),
+                onNotification: (scroll) {
+                  if (scroll.metrics.pixels == scroll.metrics.maxScrollExtent) {
+                    controller.loadMore();
+                  }
+                  return true;
+                },
+                child: RefreshIndicator(
+                  onRefresh: controller.fetchPokemons,
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (scroll) {
+                      if (scroll.metrics.pixels ==
+                          scroll.metrics.maxScrollExtent) {
+                        controller.loadMore();
+                      }
+                      return true;
+                    },
+                    child: Obx(() {
+                      final itemCount =
+                          controller.pokemons.length +
+                          (controller.isMoreLoading.value ? 1 : 0);
+                      return GridView.builder(
+                        padding: const EdgeInsets.all(12),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: .9,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
                             ),
-                          );
-                        }
-                      },
-                    );
-                  }),
+                        itemCount: itemCount,
+                        itemBuilder: (context, index) {
+                          if (index < controller.pokemons.length) {
+                            final p = controller.pokemons[index];
+                            return Container(
+                              decoration: BoxDecoration(
+                                color:
+                                    Colors
+                                        .white, 
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    spreadRadius: 1,
+                                    blurRadius: 8,
+                                    offset: const Offset(
+                                      0,
+                                      4,
+                                    ), // arah bayangan ke bawah
+                                  ),
+                                ],
+                              ),
+                              child: PokemonCard(
+                                name: p['name'] ?? '',
+                                number: p['number'] ?? '',
+                                image:
+                                    p["resolvedImage"] ??
+                                    p["graphqlImage"] ??
+                                    "",
+                                types: List<String>.from(p['types'] ?? []),
+                                onTap: () {
+                                  controller.goToDetail(p['name'] ?? '');
+                                },
+                              ),
+                            );
+                          } else {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: PikaLoadingIndicator(),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    }),
+                  ),
                 ),
               ),
-                        ),
             ),
-        ]);
+          ],
+        );
       }),
     );
   }

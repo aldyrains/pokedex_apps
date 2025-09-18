@@ -100,6 +100,42 @@ class AppThemeColors {
   }
 }
 
+ Color backgroundColor(String type) {
+    switch (type.toLowerCase()) {
+      case "grass":
+        return Colors.green.shade300;
+      case "fire":
+        return Colors.red.shade300;
+      case "water":
+        return Colors.blue.shade300;
+      case "bug":
+        return Colors.lightGreen.shade400;
+      case "poison":
+        return Colors.purple.shade300;
+      case "electric":
+        return Colors.yellow.shade400;
+      case "fairy":
+        return Colors.lightBlue.shade400;
+      case "ground":
+        return Colors.brown.shade300;
+      case "normal":
+        return Colors.teal.shade300;
+        case "fighting":
+        return Colors.orange.shade400;
+      case "psychic":
+        return Colors.indigo.shade200;
+      case "rock":
+        return Colors.grey.shade500;
+      case "ghost":
+        return Colors.deepPurple.shade300;
+      case "dragon":
+        return Colors.cyan.shade200;
+      case "ice":
+        return Colors.cyan.shade100;
+      default:
+        return Colors.grey.shade300;
+    }
+  }
 abstract class AppColors {
   static const Color white = Color(0xFFFFFFFF);
   static const Color beige = Color(0xFFA8A878);
