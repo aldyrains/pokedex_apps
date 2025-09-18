@@ -174,18 +174,23 @@ Jalankan unit & widget test:
 flutter test
 ```
 
-## App preview
+## App Preview
 
-<img src="screenshots/splashscreen.jpg" alt="Splashscreen" width="300"/>
-<img src="screenshots/home.jpg" alt="Home" width="300"/>
-<img src="screenshots/filter.jpg" alt="Filter" width="300"/>
-<img src="screenshots/afterfilteryellow.jpg" alt="After Filter Yellow" width="300"/>
-<img src="screenshots/afterfiltergreen.jpg" alt="After Filter Green" width="300"/>
-<img src="screenshots/about.jpg" alt="Detail About" width="300"/>
-<img src="screenshots/basestate.jpg" alt="Detail Base Stats" width="300"/>
-<img src="screenshots/evolutions.jpg" alt="Detail Evolution" width="300"/>
-<img src="screenshots/evolutions1.jpg" alt="Detail Evolution 1" width="300"/>
-<img src="screenshots/evolutions2.jpg" alt="Detail Evolution Expanded" width="300"/>
+| Splashscreen | Home | Filter |
+|--------------|------|--------|
+| <img src="screenshots/splashscreen.jpg" width="200"/> | <img src="screenshots/home.jpg" width="200"/> | <img src="screenshots/filter.jpg" width="200"/> |
 
+| After Filter Yellow | After Filter Green | Detail About |
+|-------------------|-----------------|--------------|
+| <img src="screenshots/afterfilteryellow.jpg" width="200"/> | <img src="screenshots/afterfiltergreen.jpg" width="200"/> | <img src="screenshots/about.jpg" width="200"/> |
 
-## created by: Aldi Riansyah 👨‍💻
+| Detail Base Stats | Evolution | Evolution 1 |
+|-----------------|-----------|-------------|
+| <img src="screenshots/basestate.jpg" width="200"/> | <img src="screenshots/evolutions.jpg" width="200"/> | <img src="screenshots/evolutions1.jpg" width="200"/> |
+
+| Evolution Expanded |
+|------------------|
+| <img src="screenshots/evolutions2.jpg" width="200"/> |
+
+## Created by: Aldi Riansyah 👨‍💻
+
