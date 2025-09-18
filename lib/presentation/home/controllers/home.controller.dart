@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:pokedex_apps/domain/core/utils/pokemon_image_utils.dart';
-import 'package:pokedex_apps/infrastructure/dal/services/pokemon_service.dart';
+import 'package:pokedex_apps/domain/core/interfaces/pokemon_repository.dart';
 import 'package:pokedex_apps/infrastructure/navigation/routes.dart';
 import 'package:pokedex_apps/domain/core/utils/strings.dart';
 
 class HomeController extends GetxController {
-  final PokemonServiceApi service;
-  HomeController(this.service);
+  final PokemonRepository repository;
+  HomeController(this.repository);
 
   var pokemons = <Map<String, dynamic>>[].obs;
   var isLoading = false.obs;
@@ -29,7 +29,7 @@ class HomeController extends GetxController {
       hasMore = true;
       limit = pageSize;
 
-      final result = await service.getPokemons(limit);
+      final result = await repository.getPokemons(first: limit);
 
       final finalList =
           result.map((item) {
@@ -63,7 +63,7 @@ class HomeController extends GetxController {
 
     try {
       limit += pageSize;
-      final result = await service.getPokemons(limit);
+      final result = await repository.getPokemons(first: limit);
 
       if (result.length <= pokemons.length) {
         hasMore = false;
@@ -93,7 +93,6 @@ class HomeController extends GetxController {
   }
 
   void goToDetail(String name) {
-    Get.toNamed(Routes.DETAIL,
-     arguments: {PokeStrings.argName: name});
+    Get.toNamed(Routes.DETAIL, arguments: {PokeStrings.argName: name});
   }
 }

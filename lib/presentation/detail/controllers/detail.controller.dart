@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pokedex_apps/domain/core/utils/pokemon_image_utils.dart';
-import 'package:pokedex_apps/infrastructure/dal/services/pokemon_service.dart';
+import 'package:pokedex_apps/domain/core/interfaces/pokemon_repository.dart';
 import 'package:pokedex_apps/infrastructure/theme/colors.dart';
 
 class DetailController extends GetxController {
-  final PokemonServiceApi service;
+  final PokemonRepository repository;
   var pokemon = <String, dynamic>{}.obs;
   var isLoading = false.obs;
   var types = <String>[];
   Rx<Color> bgColor = Colors.white.obs;
-  DetailController(this.service);
+  DetailController(this.repository);
 
   Future<void> fetchPokemonDetail(String name) async {
     try {
       isLoading.value = true;
-      final data = await service.getPokemonDetail(name);
+      final data = await repository.getPokemonDetail(name: name);
       if (data != null) {
         final map = Map<String, dynamic>.from(data);
         final number = (map['number'] ?? '').toString();

@@ -1,5 +1,5 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:pokedex_apps/domain/core/utils/strings.dart';
+import 'package:pokedex_apps/infrastructure/dal/services/pokemon_queries.dart';
 
 abstract class PokemonServiceApi {
   Future<List<Map<String, dynamic>>> getPokemons(int first);
@@ -7,34 +7,14 @@ abstract class PokemonServiceApi {
 }
 
 class PokemonService implements PokemonServiceApi {
-  late final GraphQLClient client;
-
-  PokemonService() {
-    final HttpLink httpLink = HttpLink(PokeStrings.endpoint);
-
-    client = GraphQLClient(
-      link: httpLink,
-      cache: GraphQLCache(store: InMemoryStore()),
-    );
-  }
+  final GraphQLClient client;
+  PokemonService(this.client);
 
   @override
   Future<List<Map<String, dynamic>>> getPokemons(int first) async {
-    const query = r'''
-      query pokemons($first: Int!) {
-        pokemons(first: $first) {
-          id
-          number
-          name
-          image
-          types
-        }
-      }
-    ''';
-
     final result = await client.query(
       QueryOptions(
-        document: gql(query),
+        document: gql(PokemonQueries.pokemonsQuery),
         variables: {"first": first},
         fetchPolicy: FetchPolicy.networkOnly,
       ),
@@ -51,49 +31,11 @@ class PokemonService implements PokemonServiceApi {
 
   @override
   Future<Map<String, dynamic>?> getPokemonDetail(String name) async {
-    const query = r'''
-      query pokemon($name: String!) {
-        pokemon(name: $name) {
-          id
-          number
-          name
-          image
-          classification
-          types
-          resistant
-          weaknesses
-          height {
-            minimum
-            maximum
-          }
-          weight {
-            minimum
-            maximum
-          }
-          attacks {
-            fast {
-              name
-              type
-              damage
-            }
-            special {
-              name
-              type
-              damage
-            }
-          }
-          evolutions {
-            id
-            number
-            name
-            image
-          }
-        }
-      }
-    ''';
-
     final result = await client.query(
-      QueryOptions(document: gql(query), variables: {"name": name}),
+      QueryOptions(
+        document: gql(PokemonQueries.pokemonDetailQuery),
+        variables: {"name": name},
+      ),
     );
 
     if (result.hasException) {

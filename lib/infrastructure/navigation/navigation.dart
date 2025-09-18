@@ -32,8 +32,6 @@ class Nav {
       name: Routes.HOME,
       page: () => const HomeScreen(),
       binding: HomeControllerBinding(),
-      transition: Transition.rightToLeftWithFade,
-      transitionDuration: const Duration(milliseconds: 400),
     ),
     GetPage(
       name: Routes.DETAIL,
