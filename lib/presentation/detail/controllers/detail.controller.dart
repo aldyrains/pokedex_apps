@@ -78,9 +78,19 @@ class DetailController extends GetxController {
           ? p["maxCP"] as int
           : int.tryParse((p["maxCP"] ?? '0').toString()) ?? 0;
   List<Map<String, dynamic>> get evolutions =>
-      (p["evolutions"] as List)
-          .map((e) => Map<String, dynamic>.from(e))
-          .toList();
+    (p["evolutions"] as List? ?? [])
+        .map((e) {
+          final map = Map<String, dynamic>.from(e);
+          final image = (map["image"] ?? "").toString().trim();
+
+          if (image.isEmpty) {
+            final number = (map["number"] ?? "").toString();
+            map["image"] = buildOfficialPokedexUrl(number);
+          }
+
+          return map;
+        })
+        .toList();
   List<Map<String, dynamic>> get fastAttacks =>
       (p["attacks"]?['fast'] as List? ?? const [])
           .map((a) => Map<String, dynamic>.from(a as Map))
@@ -89,6 +99,7 @@ class DetailController extends GetxController {
       (p["attacks"]?['special'] as List? ?? const [])
           .map((a) => Map<String, dynamic>.from(a as Map))
           .toList();
+  
 
   void toggleFavorite() {
     isFavorite.value = !isFavorite.value;
