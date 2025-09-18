@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pokedex_apps/domain/core/utils/strings.dart';
+import 'package:pokedex_apps/presentation/detail/section/pokemon_infoCard_about.dart';
+import 'package:pokedex_apps/presentation/detail/section/pokemon_infoCard_basestat.dart';
+import 'package:pokedex_apps/presentation/detail/section/pokemon_infoCard_evolution.dart';
 import 'package:pokedex_apps/presentation/widgets/loading.dart';
 import 'package:pokedex_apps/presentation/widgets/scaffold.dart';
 import 'package:shimmer/shimmer.dart';
@@ -14,11 +16,10 @@ class DetailScreen extends GetView<DetailController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchPokemonDetail(name);
     return Obx(() {
-       if (controller.isLoading.value && controller.pokemon.isEmpty) {
-          return const Center(child: PikaLoadingIndicator());
-        }
+      if (controller.isLoading.value && controller.pokemon.isEmpty) {
+        return const Center(child: PikaLoadingIndicator());
+      }
       return PokeballScaffold(
         backgroundColor: controller.bgColor.value,
         body: Stack(
@@ -34,8 +35,23 @@ class DetailScreen extends GetView<DetailController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Icon(Icons.arrow_back, color: Colors.black),
-                      const Icon(Icons.favorite_border, color: Colors.black),
+                      GestureDetector(
+                        onTap: () => Get.back(),
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Obx(() {
+                        final fav = controller.isFavorite.value;
+                        return GestureDetector(
+                          onTap: controller.toggleFavorite,
+                          child: Icon(
+                            fav ? Icons.favorite : Icons.favorite_border,
+                            color: fav ? Colors.red : Colors.black,
+                          ),
+                        );
+                      }),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -93,10 +109,48 @@ class DetailScreen extends GetView<DetailController> {
                 height: MediaQuery.of(context).size.height - 300,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: Offset(0, -10),
+                    ),
+                  ],
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
                 ),
-                child: Text(PokeStrings.placeholderData),
+                child: DefaultTabController(
+                  length: 3,
+                  child: Column(
+                    children: [
+                      Obx(() {
+                        return TabBar(
+                          labelColor: Colors.black,
+                          indicator: UnderlineTabIndicator(
+                            borderSide: BorderSide(
+                              color: controller.bgColor.value,
+                              width: 3,
+                            ),
+                          ),
+                          tabs: [
+                            Tab(text: "About"),
+                            Tab(text: "Base Stats"),
+                            Tab(text: "Evolutions"),
+                          ],
+                        );
+                      }),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            PokemonInfoCardAbout(), // file yg kamu upload
+                            PokemonInfoCardBaseStat(), // file yg kamu upload
+                            PokemonInfoCardEvolution(), // file yg kamu upload
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
 

@@ -12,13 +12,15 @@ class PokemonService implements PokemonServiceApi {
 
   @override
   Future<List<Map<String, dynamic>>> getPokemons(int first) async {
-    final result = await client.query(
-      QueryOptions(
-        document: gql(PokemonQueries.pokemonsQuery),
-        variables: {"first": first},
-        fetchPolicy: FetchPolicy.networkOnly,
-      ),
-    );
+    final result = await client
+        .query(
+          QueryOptions(
+            document: gql(PokemonQueries.pokemonsQuery),
+            variables: {"first": first},
+            fetchPolicy: FetchPolicy.networkOnly,
+          ),
+        )
+        .timeout(const Duration(seconds: 15));
 
     if (result.hasException) {
       throw Exception(result.exception.toString());
@@ -31,12 +33,14 @@ class PokemonService implements PokemonServiceApi {
 
   @override
   Future<Map<String, dynamic>?> getPokemonDetail(String name) async {
-    final result = await client.query(
-      QueryOptions(
-        document: gql(PokemonQueries.pokemonDetailQuery),
-        variables: {"name": name},
-      ),
-    );
+    final result = await client
+        .query(
+          QueryOptions(
+            document: gql(PokemonQueries.pokemonDetailQuery),
+            variables: {"name": name},
+          ),
+        )
+        .timeout(const Duration(seconds: 15));
 
     if (result.hasException) {
       throw Exception(result.exception.toString());

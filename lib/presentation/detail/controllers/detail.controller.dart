@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pokedex_apps/domain/core/utils/pokemon_image_utils.dart';
 import 'package:pokedex_apps/domain/core/interfaces/pokemon_repository.dart';
 import 'package:pokedex_apps/infrastructure/theme/colors.dart';
+import 'package:pokedex_apps/domain/core/utils/strings.dart';
 
 class DetailController extends GetxController {
   final PokemonRepository repository;
@@ -10,7 +11,18 @@ class DetailController extends GetxController {
   var isLoading = false.obs;
   var types = <String>[];
   Rx<Color> bgColor = Colors.white.obs;
+  RxBool isFavorite = false.obs;
   DetailController(this.repository);
+
+  @override
+  void onReady() {
+    super.onReady();
+    final args = Get.arguments as Map<String, dynamic>?;
+    final name = args?[PokeStrings.argName] as String?;
+    if (name != null && name.isNotEmpty) {
+      fetchPokemonDetail(name);
+    }
+  }
 
   Future<void> fetchPokemonDetail(String name) async {
     try {
@@ -25,8 +37,15 @@ class DetailController extends GetxController {
         types = (map['types'] as List).map((t) => t.toString()).toList();
         bgColor.value = backgroundColor(types.isNotEmpty ? types[0] : "");
       }
-    } catch (e, st) {
-      print("fetchPokemonDetail error: $e\n$st");
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Gagal mengambil data: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
     } finally {
       isLoading.value = false;
     }
@@ -36,7 +55,7 @@ class DetailController extends GetxController {
 
   String get number => p["number"].toString().padLeft(3, "0");
   String get heroTag => 'pokemon-$number';
-  String get pokemonName => p["name"];
+  String get pokemonName => p["name"] ?? '';
   List<String> get pokemonTypes =>
       (p["types"] as List).map((t) => t.toString()).toList();
   String get image => p["resolvedImage"] ?? p["graphqlImage"] ?? "";
@@ -54,4 +73,8 @@ class DetailController extends GetxController {
       (p["evolutions"] as List)
           .map((e) => Map<String, dynamic>.from(e))
           .toList();
+
+  void toggleFavorite() {
+    isFavorite.value = !isFavorite.value;
+  }
 }

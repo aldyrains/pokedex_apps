@@ -1,0 +1,17 @@
+const List<String> kPokemonTypes = [
+  'grass',
+  'fire',
+  'water',
+  'bug',
+  'poison',
+  'electric',
+  'fairy',
+  'ground',
+  'normal',
+  'fighting',
+  'psychic',
+  'rock',
+  'ghost',
+  'dragon',
+  'ice',
+];
