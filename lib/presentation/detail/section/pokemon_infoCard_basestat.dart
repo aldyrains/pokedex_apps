@@ -64,7 +64,7 @@ class PokemonInfoCardBaseStat extends StatelessWidget {
           const Text(
             'Base Stats',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               fontFamily: 'Fredoka',
             ),
