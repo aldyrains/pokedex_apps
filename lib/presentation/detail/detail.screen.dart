@@ -39,7 +39,7 @@ class DetailScreen extends GetView<DetailController> {
                         onTap: () => Get.back(),
                         child: const Icon(
                           Icons.arrow_back,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                       ),
                       Obx(() {
@@ -48,7 +48,7 @@ class DetailScreen extends GetView<DetailController> {
                           onTap: controller.toggleFavorite,
                           child: Icon(
                             fav ? Icons.favorite : Icons.favorite_border,
-                            color: fav ? Colors.red : Colors.black,
+                            color: fav ? Colors.red : Colors.white,
                           ),
                         );
                       }),
@@ -59,10 +59,9 @@ class DetailScreen extends GetView<DetailController> {
                   Text(
                     controller.pokemonName,
                     style: const TextStyle(
-                      fontSize: 28,
+                      fontSize: 35,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontFamily: 'Fredoka',
                     ),
                   ),
                   Text(
