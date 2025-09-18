@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:pokedex_apps/presentation/detail/detail.screen.dart';
+import 'package:pokedex_apps/presentation/widgets/splash_screen.dart';
 
 import '../../config.dart';
 import '../../presentation/screens.dart';
@@ -28,6 +29,8 @@ class EnvironmentsBadge extends StatelessWidget {
 
 class Nav {
   static List<GetPage> routes = [
+    GetPage(name: Routes.SPLASHSCREEN, page: ()=> const SplashScreen()),
+
     GetPage(
       name: Routes.HOME,
       page: () => const HomeScreen(),
